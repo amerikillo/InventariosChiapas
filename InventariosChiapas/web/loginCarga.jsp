@@ -10,6 +10,8 @@
 <%
     ConectionDB con = new ConectionDB();
     Consultas cons = new Consultas();
+    HttpSession sesion = request.getSession();
+    sesion.invalidate();
 
     /*con.conectar();
      ResultSet rset = con.consulta(cons.obtiene_unidades());

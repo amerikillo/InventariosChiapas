@@ -11,6 +11,9 @@
     ConectionDB con=new ConectionDB();
     Consultas cons  = new Consultas();
     
+    HttpSession sesion = request.getSession();
+    sesion.invalidate();
+    
     /*con.conectar();
     ResultSet rset = con.consulta(cons.obtiene_unidades());
     while (rset.next()){
@@ -73,15 +76,16 @@
 
         <!-- Cuerpo de la pagina -->
         <div class="container">
-            <h1>Plantilla de Proyectos!</h1>
-            <!-- Los Botones tendran la siguiente forma -->
-            <button class="btn" type="submit">Enviar</button>
+            <div style="width: 300px; margin: auto;">
+                Aquí va la imagen
+            </div>
         </div>
 
         <div class="navbar navbar-default navbar-fixed-bottom">
             <div class="container">
                     <div class="text-center text-muted">
-                        Derechos Reservardos <span class="glyphicon glyphicon-registration-mark"></span>
+                        GNKLogística <span class="glyphicon glyphicon-registration-mark"></span> <br />
+                        Desarrollo 2009 - 2014
                     </div>
             </div>
         </div>

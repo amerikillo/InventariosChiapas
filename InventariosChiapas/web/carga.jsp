@@ -8,6 +8,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Clases.*" %>
 <%
+    HttpSession sesion = request.getSession();
+    String usua = "";
+    if (sesion.getAttribute("usuario") != null) {
+        usua = (String) sesion.getAttribute("usuario");
+    } else {
+        response.sendRedirect("index.jsp");
+    }
+    
     ConectionDB con = new ConectionDB();
     Consultas cons = new Consultas();
 
