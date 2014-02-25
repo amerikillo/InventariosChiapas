@@ -48,9 +48,10 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="consulta.jsp">Consulta</a></li>
+                        <li class="active"><a href="http://166.78.128.202:8080/CensosChia/">Menú</a></li>
+                        <li><a href="consulta.jsp">Consulta</a></li>
                         <li><a href="loginCarga.jsp">Subir Inventarios</a></li>
-                        <li><a href="#contact">Sistemas</a></li>
+                        <li><a href="http://166.78.128.202:8080/CensosChia/">Salir</a></li>
                         <!--li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
                             <ul class="dropdown-menu">
@@ -96,7 +97,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-block" type="submit" name="accion" value="login">Enviar</button>
+                            <button class="btn btn-block btn-primary" type="submit" name="accion" value="login">Enviar</button>
                         </div>
                     </div>
                 </div>
