@@ -76,7 +76,7 @@
 
         <!-- Cuerpo de la pagina -->
         <div class="container">
-            <h1>Plantilla de Proyectos!</h1>
+            <h1>Ingrese sus credenciales</h1>
             <form action="Login">
                 <div class="jumbotron">
                     <div class="row">
