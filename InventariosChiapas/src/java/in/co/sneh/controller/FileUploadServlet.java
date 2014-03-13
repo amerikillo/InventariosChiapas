@@ -18,60 +18,65 @@ import java.io.PrintWriter;
 import org.apache.commons.fileupload.FileItemIterator;
 import javax.servlet.http.HttpSession;
 import Clases.*;
-    /**
+
+/**
  *
  * @author CEDIS TOLUCA3
  */
-public class FileUploadServlet extends HttpServlet { 
-    
+public class FileUploadServlet extends HttpServlet {
+
     LeerExcel lee = new LeerExcel();
-    
-    public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ConectionDB con = new ConectionDB();
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        String Unidad="";
-        
-        boolean isMultiPart=ServletFileUpload.isMultipartContent(request);        
-        if (isMultiPart){
+        String Unidad = "";
+
+        boolean isMultiPart = ServletFileUpload.isMultipartContent(request);
+        if (isMultiPart) {
             ServletFileUpload upload = new ServletFileUpload();
-            try{
+            try {
                 HttpSession sesion = request.getSession(true);
-                FileItemIterator  itr = upload.getItemIterator(request);
-                while(itr.hasNext()){
+                FileItemIterator itr = upload.getItemIterator(request);
+                while (itr.hasNext()) {
                     FileItemStream item = itr.next();
-                    if(item.isFormField()){
+                    if (item.isFormField()) {
                         String fielName = item.getFieldName();
                         InputStream is = item.openStream();
-                        byte [] b = new byte[is.available()];
+                        byte[] b = new byte[is.available()];
                         is.read(b);
-                        String value = new String (b);
-                        response.getWriter().println(fielName+":"+value+"<br/>");
-                        if(fielName.equals("id_uni")){
+                        String value = new String(b);
+                        response.getWriter().println(fielName + ":" + value + "<br/>");
+                        if (fielName.equals("id_uni")) {
                             Unidad = value;
                         }
-                    }else{
+                    } else {
                         String path = getServletContext().getRealPath("/");
-                        if(FileUpload.processFile(path, item, Unidad)){
-                            response.getWriter().println("file uploaded successfully");
+                        if (FileUpload.processFile(path, item, Unidad)) {
+                            //response.getWriter().println("file uploaded successfully");
                             sesion.setAttribute("ban", "1");
-                            lee.leeExcel(path, item.getName());
+                            if (lee.leeExcel(path, item.getName())) {
+                                out.println("<script>alert('Se Subio el Inventario Correctamente')</script>");
+                                out.println("<script>window.location='carga.jsp'</script>");
+                            }
                             //response.sendRedirect("cargaFotosCensos.jsp");
-                        }else{ 
-                            response.getWriter().println("file uploading falied");
+                        } else {
+                            //response.getWriter().println("file uploading falied");
                             //response.sendRedirect("cargaFotosCensos.jsp");
                         }
                     }
                 }
-            }catch(FileUploadException fue){
+            } catch (FileUploadException fue) {
                 fue.printStackTrace();
             }
-            response.sendRedirect("carga.jsp");
+            out.println("<script>alert('No se pudo subir el inventario, verifique las celdas')</script>");
+            out.println("<script>window.location='carga.jsp'</script>");
+            //response.sendRedirect("carga.jsp");
         }
-        
+
         /*
-        * Para insertar el excel en tablas
-        */
-        
+         * Para insertar el excel en tablas
+         */
     }
-}  
+}

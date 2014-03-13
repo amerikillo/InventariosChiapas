@@ -17,15 +17,30 @@
         
      }
      con.cierraConexion();*/
-    String nom_gnk="";
+    try{
+        con.conectar();
+        ResultSet rset = con.consulta("select cla_pro from inventarios where cla_pro not in (select clave from clave_med);");
+        while(rset.next()){
+            con.ejecuta("insert into clave_med values ('0', '0', '"+rset.getString("cla_pro")+"', 'Sin descripcion', '-', '-', '-')");
+        }
+        con.cierraConexion();
+    }catch (Exception e) {}
+    String nom_gnk="", fecha="", canti="";
     try {
         con.conectar();
-        ResultSet rset = con.consulta("select nombre_gnk from tb_unidades where id_uni = '"+request.getParameter("unidad")+"'");
+        ResultSet rset = con.consulta("select u.nombre_gnk, i.fecha, sum(i.cant) as cant from tb_unidades u, inventarios i where i.id_uni = '"+request.getParameter("unidad")+"' and u.id_uni = i.id_uni");
         while(rset.next()){
             nom_gnk = rset.getString("nombre_gnk");
+            fecha = rset.getString("fecha");
+			canti = rset.getString("cant");
         }
         con.cierraConexion();
     } catch (Exception e) {
+    }
+    if (nom_gnk==null){
+        nom_gnk = "";
+        fecha="";
+        canti="";
     }
 %>
 <!DOCTYPE html>
@@ -99,7 +114,6 @@
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="http://166.78.128.202:8080/CensosChia/">Menú</a></li>
                         <li><a href="consulta.jsp">Consulta</a></li>
-                        <li><a href="loginCarga.jsp">Subir Inventarios</a></li>
                         <li><a href="http://166.78.128.202:8080/CensosChia/">Salir</a></li>
                         <!--li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
@@ -136,6 +150,20 @@
                     <div class="col-sm-4">
                         <select class="form-control form-horizontal" name="jurisdiccion" id = "jurisdiccion" onchange="rellenaUni();">
                             <option value ="">Seleccione Jurisdicción</option>
+                            <%
+    try{
+        con.conectar();
+        int no_jur=1;
+        ResultSet rset = con.consulta("select tu.juris from tb_unidades tu, inventarios i where i.id_uni = tu.id_uni group by tu.juris order by tu.juris asc;");
+        while(rset.next()){
+            out.println("<option value ='J"+no_jur+"'>"+rset.getString(1)+"</option>");
+            no_jur++;
+        }
+        no_jur=0;
+        con.cierraConexion();
+    }catch(Exception e){
+    }
+                            %>
                             <option value ="J1">Jurisdicción Sanitaria 1</option>
                             <option value ="J2">Jurisdicción Sanitaria 2</option>
                             <option value ="J3">Jurisdicción Sanitaria 3</option>
@@ -165,10 +193,21 @@
                     <div class="col-sm-1 form-horizontal">
                         Unidad
                     </div>
-                    <div class="col-sm-11">
+                    <div class="col-sm-5">
                         <input class="form-control" type="text" value="<%=nom_gnk%>" />
                     </div>
-
+                    <div class="col-sm-1 form-horizontal">
+                        Cantidad de piezas
+                    </div>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="text" value="<%=canti%>" />
+                    </div>
+					 <div class="col-sm-1 form-horizontal">
+                        Fecha de Captura
+                    </div>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="text" value="<%=fecha%>" />
+                    </div>
                 </div>
                 <br /><br />
             </form>
@@ -185,7 +224,7 @@
                     <!--Loop start, you could use a repeat region here-->
                     <%                        try {
                             con.conectar();
-                            ResultSet rset = con.consulta("select i.cla_pro, i.lot_pro, i.cad_pro, i.cant, c.descrip from inventarios i, clave_med c where i.cla_pro = c.clave and i.id_uni = '" + request.getParameter("unidad") + "'");
+                            ResultSet rset = con.consulta("select i.cla_pro, i.lot_pro, i.cad_pro, sum(i.cant) as cant, c.descrip from inventarios i, clave_med c where i.cla_pro = c.clave and i.id_uni = '" + request.getParameter("unidad") + "' group by i.cla_pro, i.lot_pro, i.cad_pro");
                             while (rset.next()) {
                     %>
                     <tr height="20">

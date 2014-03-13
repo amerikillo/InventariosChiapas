@@ -23,7 +23,8 @@ public class LeerExcel {
 
     ConectionDB con = new ConectionDB();
 
-    public void leeExcel(String ruta, String arch) {
+    public boolean leeExcel(String ruta, String arch) {
+        String query = "";
         try {
             // TODO code application logic here
             //Ubicación del archivo XLS
@@ -47,10 +48,11 @@ public class LeerExcel {
             //Para efectos de ejemplo recorremos las columnas de cada fila
             try {
                 con.conectar();
-                for (int x = 0;
+                query = "insert into inventarios values  ";
+                for (int x = 1;
                         x < rows;
                         x++) {
-                    String query = "insert into inventarios values ( ";
+                    query = query + "(";
                     for (int y = 0; y < cols; y++) {
                         //Obtenemos el valor de la celda de la columna Y y fila X
                         celdaCurso = sheet.getCell(y, x);
@@ -63,24 +65,32 @@ public class LeerExcel {
                         }
                         //System.out.print(valorCeldaCurso + "\t");
                     }
-                    query = query + ");";
-                    try {
-                        System.out.println(query);
-                        con.ejecuta(query);
-                        //con.insertar(query);
-                    } catch (Exception ex) {
-                        System.out.println(ex.getMessage());
+                    if (x == rows - 1) {
+                        query = query + ")";
+                    } else {
+                        query = query + "),";
                     }
                     //System.out.println(query);
                 }
+                query = query + ";";
                 con.cierraConexion();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
+
+            System.out.println(query);
             workbook.close();
         } catch (IOException e) {
         } catch (BiffException e) {
         } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            con.conectar();
+            con.ejecuta(query);
+            con.cierraConexion();
+            return true;
+        } catch (SQLException e) {
+            return false;
         }
     }
 
