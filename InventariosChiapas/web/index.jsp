@@ -12,7 +12,7 @@
     Consultas cons  = new Consultas();
     
     HttpSession sesion = request.getSession();
-    sesion.invalidate();
+    //sesion.invalidate();
     
     /*con.conectar();
     ResultSet rset = con.consulta(cons.obtiene_unidades());
@@ -49,7 +49,7 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="http://166.78.128.202:8080/CensosChia/">Menú</a></li>
+                        <li class="active"><a href="http://166.78.128.202:8080/CensosChia/indexMain.jsp">Menú</a></li>
                         <li><a href="consulta.jsp">Consulta</a></li>
                         <li><a href="http://166.78.128.202:8080/CensosChia/">Salir</a></li>
                         <!--li class="dropdown">
