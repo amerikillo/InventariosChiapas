@@ -246,13 +246,7 @@
             </table>
         </div>
 
-        <div class="navbar navbar-default navbar-fixed-bottom">
-            <div class="container">
-                <div class="text-center text-muted">
-                    Derechos Reservardos <span class="glyphicon glyphicon-registration-mark"></span>
-                </div>
-            </div>
-        </div>
+        
     </body>
 </html>
 
