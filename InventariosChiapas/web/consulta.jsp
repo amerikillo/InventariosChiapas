@@ -4,6 +4,7 @@
     Author     : amerikillo
 --%>
 
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Clases.*" %>
@@ -11,36 +12,40 @@
     ConectionDB con = new ConectionDB();
     Consultas cons = new Consultas();
 
+    DecimalFormat format = new DecimalFormat("###,###,###");
+    int can=0;
     /*con.conectar();
      ResultSet rset = con.consulta(cons.obtiene_unidades());
      while (rset.next()){
         
      }
      con.cierraConexion();*/
-    try{
-        con.conectar();
-        ResultSet rset = con.consulta("select cla_pro from inventarios where cla_pro not in (select clave from clave_med);");
-        while(rset.next()){
-            con.ejecuta("insert into clave_med values ('0', '0', '"+rset.getString("cla_pro")+"', 'Sin descripcion', '-', '-', '-')");
-        }
-        con.cierraConexion();
-    }catch (Exception e) {}
-    String nom_gnk="", fecha="", canti="";
     try {
         con.conectar();
-        ResultSet rset = con.consulta("select u.nombre_gnk, i.fecha, sum(i.cant) as cant from tb_unidades u, inventarios i where i.id_uni = '"+request.getParameter("unidad")+"' and u.id_uni = i.id_uni");
-        while(rset.next()){
-            nom_gnk = rset.getString("nombre_gnk");
-            fecha = rset.getString("fecha");
-			canti = rset.getString("cant");
+        ResultSet rset = con.consulta("select cla_pro from inventarios where cla_pro not in (select clave from clave_med);");
+        while (rset.next()) {
+            con.ejecuta("insert into clave_med values ('0', '0', '" + rset.getString("cla_pro") + "', 'Sin descripcion', '-', '-', '-')");
         }
         con.cierraConexion();
     } catch (Exception e) {
     }
-    if (nom_gnk==null){
+    String nom_gnk = "", fecha = "", canti = "";
+    try {
+        con.conectar();
+        ResultSet rset = con.consulta("select u.nombre_gnk, i.fecha, sum(i.cant) as cant from tb_unidades u, inventarios i where i.id_uni = '" + request.getParameter("unidad") + "' and u.id_uni = i.id_uni");
+        while (rset.next()) {
+            nom_gnk = rset.getString("nombre_gnk");
+            fecha = rset.getString("fecha");
+            canti = rset.getString("cant");
+            canti = ""+format.format(Integer.parseInt(canti));
+        }
+        con.cierraConexion();
+    } catch (Exception e) {
+    }
+    if (nom_gnk == null) {
         nom_gnk = "";
-        fecha="";
-        canti="";
+        fecha = "";
+        canti = "";
     }
 %>
 <!DOCTYPE html>
@@ -151,20 +156,20 @@
                         <select class="form-control form-horizontal" name="jurisdiccion" id = "jurisdiccion" onchange="rellenaUni();">
                             <option value ="">Seleccione Jurisdicción</option>
                             <%
-    try{
-        con.conectar();
-        int no_jur=1;
-        ResultSet rset = con.consulta("select tu.juris from tb_unidades tu, inventarios i where i.id_uni = tu.id_uni group by tu.juris order by tu.juris asc;");
-        while(rset.next()){
-            //out.println("<option value ='J"+no_jur+"'>"+rset.getString(1)+"</option>");
-            String var[]=rset.getString(1).split(" ");
-            out.println("<option value ='J"+var[2]+"'>"+rset.getString(1)+"</option>");
-            //no_jur++;
-        }
-        //no_jur=0;
-        con.cierraConexion();
-    }catch(Exception e){
-    }
+                                try {
+                                    con.conectar();
+                                    int no_jur = 1;
+                                    ResultSet rset = con.consulta("select tu.juris from tb_unidades tu, inventarios i where i.id_uni = tu.id_uni group by tu.juris order by tu.juris asc;");
+                                    while (rset.next()) {
+                                        //out.println("<option value ='J"+no_jur+"'>"+rset.getString(1)+"</option>");
+                                        String var[] = rset.getString(1).split(" ");
+                                        out.println("<option value ='J" + var[2] + "'>" + rset.getString(1) + "</option>");
+                                        //no_jur++;
+                                    }
+                                    //no_jur=0;
+                                    con.cierraConexion();
+                                } catch (Exception e) {
+                                }
                             %>
                             <!--option value ="J1">Jurisdicción Sanitaria 1</option>
                             <option value ="J2">Jurisdicción Sanitaria 2</option>
@@ -204,7 +209,7 @@
                     <div class="col-sm-2">
                         <input class="form-control" type="text" value="<%=canti%>" />
                     </div>
-					 <div class="col-sm-1 form-horizontal">
+                    <div class="col-sm-1 form-horizontal">
                         Fecha de Captura
                     </div>
                     <div class="col-sm-2">
@@ -232,7 +237,7 @@
                         <td class="negritas" align="center"><%=rset.getString("cla_pro")%></td>
                         <td class="negritas" ><%=rset.getString("descrip")%></td>
                         <td class="negritas" align="center"><%=rset.getString("cad_pro")%></td>
-                        <td colspan="3" align="center" class="negritas"><%=rset.getString("cant")%></td>
+                        <td colspan="3" align="center" class="negritas"><%=format.format(Integer.parseInt(rset.getString("cant")))%></td>
                     </tr>
                     <%
                             }
@@ -417,7 +422,7 @@
             ResultSet rset = con.consulta("select u.juris, u.id_uni, u.nombre_gnk from tb_unidades u, inventarios i where u.id_uni = i.id_uni and u.juris='JURISDICCION SANITARIA 10' group by u.id_uni;");
             while (rset.next()) {
                 out.println("addOption(document.form.unidad, '" + rset.getString("id_uni") + "', '" + rset.getString("nombre_gnk") + "');");
-                
+
             }
             con.cierraConexion();
         } catch (Exception e) {
