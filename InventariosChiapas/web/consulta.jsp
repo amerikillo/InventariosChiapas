@@ -13,7 +13,7 @@
     Consultas cons = new Consultas();
 
     DecimalFormat format = new DecimalFormat("###,###,###");
-    int can=0;
+    int can = 0;
     /*con.conectar();
      ResultSet rset = con.consulta(cons.obtiene_unidades());
      while (rset.next()){
@@ -37,7 +37,7 @@
             nom_gnk = rset.getString("nombre_gnk");
             fecha = rset.getString("fecha");
             canti = rset.getString("cant");
-            canti = ""+format.format(Integer.parseInt(canti));
+            canti = "" + format.format(Integer.parseInt(canti));
         }
         con.cierraConexion();
     } catch (Exception e) {
@@ -152,7 +152,7 @@
                     <div class="col-sm-1 form-horizontal">
                         Jurisdicción:
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <select class="form-control form-horizontal" name="jurisdiccion" id = "jurisdiccion" onchange="rellenaUni();">
                             <option value ="">Seleccione Jurisdicción</option>
                             <%
@@ -171,28 +171,22 @@
                                 } catch (Exception e) {
                                 }
                             %>
-                            <!--option value ="J1">Jurisdicción Sanitaria 1</option>
-                            <option value ="J2">Jurisdicción Sanitaria 2</option>
-                            <option value ="J3">Jurisdicción Sanitaria 3</option>
-                            <option value ="J4">Jurisdicción Sanitaria 4</option>
-                            <option value ="J5">Jurisdicción Sanitaria 5</option>
-                            <option value ="J6">Jurisdicción Sanitaria 6</option>
-                            <option value ="J7">Jurisdicción Sanitaria 7</option>
-                            <option value ="J8">Jurisdicción Sanitaria 8</option>
-                            <option value ="J9">Jurisdicción Sanitaria 9</option>
-                            <option value ="J10">Jurisdicción Sanitaria 10</option-->
+
                         </select>
                     </div>
                     <div class="col-sm-1 form-horizontal">
                         Unidad
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <select class="form-control form-horizontal" name="unidad" id="unidad" >
                             <option>Unidad</option>
                         </select>
                     </div>
                     <div class="col-sm-2 form-horizontal">
                         <button class="btn btn-block btn-primary" type="submit">Consultar</button>
+                    </div>
+                    <div class="col-sm-2 form-horizontal">
+                        <a class="btn btn-block btn-success" href="exportarInventarios.jsp">Exportar</a>
                     </div>
                 </div>
                 <br /><br /><br />
@@ -251,7 +245,7 @@
             </table>
         </div>
 
-        
+
     </body>
 </html>
 
